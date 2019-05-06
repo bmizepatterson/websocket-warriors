@@ -14,14 +14,35 @@ body {
 .welcome-banner {
     width: 100%;
     background-color: $black;
-    box-shadow: 0 0 10px 10px grey, 
-                inset 0 0 50px 10px #555;
+    box-shadow: $shadow-drama, 
+                inset 0 0 50px 10px $gray-800;
 }
 
-.board {
-    border: 1px solid red;
+.app {
+    box-shadow: $shadow-drama;
+    .board {
+        width: 600px;
+        background-color: $light;
+    }
+    
+    .player-list {
+        width: 300px;
+        background-color: $black;
+
+        .list-group-item {
+            background: transparent;
+            border-radius: 0;
+        }
+
+        .badge {
+            font-size: inherit;
+        }
+    }
 }
 
-.participants {
-    border: 1px solid blue;
+.fade-enter-active, .fade-leave-active {
+    transition: opacity .2s ease;
+}
+.fade-enter, .fade-leave-to {
+    opacity: 0;
 }

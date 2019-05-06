@@ -11,6 +11,9 @@
 |
 */
 
-Route::view('/', 'welcome')->name('welcome');
+Route::view('/', 'app');
 
-Route::view('/app', 'app')->name('app');
+
+Route::fallback(function () {
+    return redirect('/');
+});

@@ -10669,14 +10669,39 @@ body {
 .welcome-banner {
   width: 100%;
   background-color: #000;
-  box-shadow: 0 0 10px 10px grey, inset 0 0 50px 10px #555;
+  box-shadow: 0 0 500px 10px #6c757d, inset 0 0 50px 10px #343a40;
 }
 
-.board {
-  border: 1px solid red;
+.app {
+  box-shadow: 0 0 500px 10px #6c757d;
 }
 
-.participants {
-  border: 1px solid blue;
+.app .board {
+  width: 600px;
+  background-color: #f8f9fa;
+}
+
+.app .player-list {
+  width: 300px;
+  background-color: #000;
+}
+
+.app .player-list .list-group-item {
+  background: transparent;
+  border-radius: 0;
+}
+
+.app .player-list .badge {
+  font-size: inherit;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 
