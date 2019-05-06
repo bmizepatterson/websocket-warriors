@@ -52066,14 +52066,28 @@ files.keys().map(function (key) {
 var app = new Vue({
   router: _router__WEBPACK_IMPORTED_MODULE_0__["default"],
   el: '#app',
-  template: "\n        <transition name=\"fade\" mode=\"out-in\">\n            <router-view></router-view>\n        </transition>\n    ",
+  template: "\n        <span>Status: {{ status }}</span>\n        <transition name=\"fade\" mode=\"out-in\">\n            <router-view></router-view>\n        </transition>\n    ",
   data: {
+    socket: null,
+    status: 'Disconnected',
     users: []
   },
-  created: function created() {// Echo.join('game')
-    //     .here(users => {
-    //         this.users = users;
-    //     });
+  created: function created() {
+    var self = this;
+    self.socket = new WebSocket('ws://localhost:8000/app');
+
+    self.socket.onerror = function (error) {
+      self.$refs.status = 'Error';
+      console.error('Websocket error: ' + error);
+    };
+
+    self.socket.onopen = function () {
+      return self.$refs.status = 'Connected';
+    };
+
+    self.socket.onclose = function () {
+      return self.$refs.status = 'Disconnected';
+    };
   },
   methods: {}
 });

@@ -1,5 +1,8 @@
 <?php
 
+use App\WebSocketHandler;
+use BeyondCode\LaravelWebSockets\Facades\WebSocketsRouter;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -12,6 +15,8 @@
 */
 
 Route::view('/', 'app');
+
+WebSocketsRouter::webSocket('app', WebSocketHandler::class);
 
 
 Route::fallback(function () {
