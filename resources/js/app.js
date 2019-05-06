@@ -26,33 +26,8 @@ const app = new Vue({
     el: '#app',
 
     template: `
-        <span>Status: {{ status }}</span>
         <transition name="fade" mode="out-in">
             <router-view></router-view>
         </transition>
-    `,
-
-    data: {
-        socket: null,
-        status: 'Disconnected',
-        users: [],
-    },
-
-    created() {
-        const self = this;
-
-        self.socket = new WebSocket('ws://localhost:8000/app')
-
-        self.socket.onerror = (error) => {
-            self.$refs.status = 'Error';
-            console.error('Websocket error: ' + error);
-        }
-
-        self.socket.onopen = () => self.$refs.status = 'Connected';
-
-        self.socket.onclose = () => self.$refs.status = 'Disconnected';
-    },
-
-    methods: {
-    }
+    `
 });

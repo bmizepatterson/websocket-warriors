@@ -11,7 +11,10 @@ class WebSocketHandler implements MessageComponentInterface
 
     public function onOpen(ConnectionInterface $connection)
     {
-        // TODO: Implement onOpen() method.
+        
+        $this->verifyAppKey($connection)
+             ->generateSocketId($connection)
+             ->establishConnection($connection);
     }
     
     public function onClose(ConnectionInterface $connection)

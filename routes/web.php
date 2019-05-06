@@ -16,7 +16,7 @@ use BeyondCode\LaravelWebSockets\Facades\WebSocketsRouter;
 
 Route::view('/', 'app');
 
-WebSocketsRouter::webSocket('app', WebSocketHandler::class);
+WebSocketsRouter::webSocket('app/{appKey}', WebSocketHandler::class);
 
 
 Route::fallback(function () {
