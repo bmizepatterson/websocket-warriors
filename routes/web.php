@@ -1,5 +1,8 @@
 <?php
 
+use App\Events\UserScoreUpdated;
+use Illuminate\Http\Request;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -12,6 +15,10 @@
 */
 
 Route::view('/', 'app');
+
+Route::post('/app', function(Request $request) {
+    event(new UserScoreUpdated($request->score));
+});
 
 Route::fallback(function () {
     return redirect('/');

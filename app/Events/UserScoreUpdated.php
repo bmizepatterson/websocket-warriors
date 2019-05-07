@@ -12,7 +12,7 @@ class UserScoreUpdated implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $user;
+    // public $user;
     public $score;
 
     /**
@@ -20,9 +20,9 @@ class UserScoreUpdated implements ShouldBroadcastNow
      *
      * @return void
      */
-    public function __construct($user, $score)
+    public function __construct($score)
     {
-        $this->user = $user;
+        // $this->user = $user;
         $this->score = $score;
     }
 

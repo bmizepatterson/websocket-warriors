@@ -11,4 +11,6 @@
 |
 */
 
-Broadcast::channel('game');
+Broadcast::channel('game', function () {
+    return true;
+});
