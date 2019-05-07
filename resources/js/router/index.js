@@ -16,7 +16,7 @@ export default new Router({
             component: AppWelcome,
         },
         {
-            path: '/play',
+            path: '/play/:gameCode',
             name: 'app',
             component: AppMain,
         },

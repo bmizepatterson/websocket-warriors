@@ -13,7 +13,7 @@ export default {
                 score: this.$root.player.score += 10,
             }
 
-            axios.post('/app', payload).then(response => {
+            axios.post('/game', payload).then(response => {
                 console.log(response);
             });
         }

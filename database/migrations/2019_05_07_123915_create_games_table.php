@@ -17,6 +17,8 @@ class CreateGamesTable extends Migration
             $table->bigIncrements('id');
             $table->string('code');
             $table->timestampsTz();
+
+            $table->unique('code');
         });
     }
 

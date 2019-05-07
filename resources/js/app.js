@@ -10,6 +10,7 @@ const app = new Vue({
     el: '#app',
 
     data: {
+        game: '',
         users: [],
         player: {
             name: null,

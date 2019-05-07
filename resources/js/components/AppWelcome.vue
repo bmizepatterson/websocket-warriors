@@ -21,7 +21,7 @@
                         <button class="btn btn-primary" @click="join">Join Game:</button>
                     </div>
                     <label for="game-code" class="sr-only">Game code</label>
-                    <input id="game-code" class="form-control" placeholder="Game code" v-model="code">
+                    <input id="game-code" class="form-control" placeholder="Game code" v-model="code" @keyup.enter="join">
                 </div>
             </div>
         </div>
@@ -46,17 +46,28 @@ export default {
     },
     methods: {
         join() {
-            if (this.newUser === '' || this.code === '') return ;
-            this.$root.users.push(this.player);
-            this.$root.player = this.player;      
-            this.$router.push({ name: 'app' });
+            if (this.newUser === '' || this.code === '') return;
+            // Find the game in the DB
+            const self = this;
+            axios.get('/play/' + self.code).then(response => {
+
+                self.$root.game = self.code;
+                self.$root.users.push(self.player);
+                self.$root.player = self.player;      
+                self.$router.push({ name: 'app', params: { gameCode: self.code }});
+            });
         },
         start() {
             if (this.newUser === '') return;
             // Get game ID from server
-            this.$root.users.push(this.player);
-            this.$root.player = this.player;
-            this.$router.push({ name: 'app' });
+            const self = this;
+            axios.post('/play/new').then(response => {
+                self.$root.game = response.data
+                self.$root.users.push(self.player);
+                self.$root.player = self.player;
+                self.$router.push({ name: 'app', params: { gameCode: response.data }});
+            });
+
         }
     }
 }

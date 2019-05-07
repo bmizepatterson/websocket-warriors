@@ -11,6 +11,6 @@
 |
 */
 
-Broadcast::channel('game', function () {
+Broadcast::channel('game.{$gameCode}', function () {
     return true;
 });
