@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
 Route::view('/', 'app');
 
 Route::post('/app', function(Request $request) {
-    event(new UserScoreUpdated($request->score));
+    event(new UserScoreUpdated($request->user, $request->score));
 });
 
 Route::fallback(function () {

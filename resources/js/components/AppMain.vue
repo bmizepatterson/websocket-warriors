@@ -1,12 +1,15 @@
 <template>
     <div class="app row no-gutters" style="height: 600px;">
         <div class="board">
-            <button id="test-button" class="btn btn-secondary" @click="updateScore">Click me</button>
         </div>
 
         <div class="player-list">
             <ul class="list-group">
-                <li class="list-group-item">Player 1 <span class="badge badge-primary float-right">{{ score }}</span></li>
+                <li v-for="user in $root.users" :key="user.name" class="list-group-item">
+                    {{ user.name }}
+                    <span class="add" @click="updateScore(user)">+</span>
+                    <span class="badge badge-primary float-right">{{ user.score }}</span>
+                </li>
             </ul>
         </div>
     </div>
@@ -16,8 +19,6 @@
 export default {
     data() {
         return {
-            score: 0,
-            users: [],
         }
     },
 
@@ -31,10 +32,15 @@ export default {
     },
 
     methods: {
-        updateScore() {
+        updateScore(user) {
             const self = this;
 
-            axios.post('/app', {score: self.score += 10}).then(response => {
+            const payload = {
+                user: user.name,
+                score: user.score += 10,
+            }
+
+            axios.post('/app', payload).then(response => {
                 console.log(response);
             });
         }
@@ -44,10 +50,16 @@ export default {
 </script>
 
 <style scoped>
-.status-bar {
-    font-size: 90%;
-    position: absolute;
-    bottom: 0;
-    left: 5px;
+.add {
+    display: inline-block;
+    width: 20;
+    height:20;
+    color: black;
+    background-color:white;
+    border-radius:100%;
+    cursor: pointer;
+    vertical-align: middle;
+    text-align:center;
+    margin-left: 5px;
 }
 </style>

@@ -20,9 +20,9 @@ class UserScoreUpdated implements ShouldBroadcastNow
      *
      * @return void
      */
-    public function __construct($score)
+    public function __construct($user, $score)
     {
-        // $this->user = $user;
+        $this->user = $user;
         $this->score = $score;
     }
 
