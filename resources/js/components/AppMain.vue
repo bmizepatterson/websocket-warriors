@@ -1,7 +1,6 @@
 <template>
     <div class="app row no-gutters" style="height: 600px;">
-        <div class="board">
-        </div>
+        <app-board />
 
         <div class="player-list">
             <ul class="list-group">
@@ -16,10 +15,16 @@
 </template>
 
 <script>
+import AppBoard from './AppBoard.vue';
+
 export default {
     data() {
         return {
         }
+    },
+
+    components: {
+        AppBoard,
     },
 
     created() {
@@ -60,14 +65,6 @@ export default {
 }
 .app {
     box-shadow: $shadow-drama;
-
-    .board {
-        width: 600px;
-        background-color: $gray-100;
-        position: relative;
-        box-shadow: 10px 0 5px -5px black;
-    }
-    
     .player-list {
         width: 300px;
         background-color: $primary;
@@ -76,6 +73,11 @@ export default {
         .list-group-item {
             background: transparent;
             border-radius: 0;
+            transition: background-color 0.2s;
+
+            &:hover {
+                background: darken($primary, 10%);
+            }
         }
 
         .badge {

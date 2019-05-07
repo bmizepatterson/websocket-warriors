@@ -4,7 +4,7 @@
         <div class="row pt-5 justify-content-center">
             <div class="col-sm-6">
                 <label for="name" class="sr-only">Your name</label>
-                <input id="name" class="form-control" placeholder="Your name" v-model="newUser" @keyup.enter="start">
+                <input id="name" class="form-control" placeholder="Your name" v-model="newUser" @keyup.enter="start" autofocus>
             </div>
         </div>
 
