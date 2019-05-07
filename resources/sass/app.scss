@@ -9,6 +9,7 @@ body {
     letter-spacing: 10px;
     word-spacing: 10px;
     background-image: linear-gradient(180deg,#8b60ed,#b372bd);
+    text-transform: uppercase;
 }
 
 .fade-enter-active, .fade-leave-active {
@@ -19,12 +20,14 @@ body {
 }
 
 .btn {
+    text-transform: uppercase;
     &:active, &:focus, &:not(:disabled):not(.disabled):active:focus {
         box-shadow: 0 0 0 3px $white;
     }
 }
 .form-control {
     border:0;
+    text-transform: uppercase;
     &:active, &:focus, &:not(:disabled):not(.disabled):active:focus {
         box-shadow: 0 0 0 3px $primary;
     }
