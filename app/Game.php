@@ -7,6 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class Game extends Model
 {
     /**
+     * An array of players in this game
+     * (not persisted to DB)
+     * 
+     * @var array
+     */
+    public $users;
+
+    /**
      * The attributes that should be cast to native types.
      *
      * @var array
@@ -16,6 +24,24 @@ class Game extends Model
         'updated_at' => 'datetime:U',
     ];
 
+    /**
+     * The relationships that should always be loaded.
+     *
+     * @var array
+     */
+    protected $with = ['users'];
+
+    /**
+     * Get the users playing this game
+     */
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
+
+    /**
+     * Generate a unique but memorable id code for this game
+     */
     public static function makeCode()
     {
         $faker = \Faker\Factory::create();

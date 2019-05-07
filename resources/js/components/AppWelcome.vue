@@ -18,10 +18,10 @@
             <div class="col-sm-7">
                 <div class="input-group">
                     <div class="input-group-prepend">
-                        <button class="btn btn-primary" @click="join">Join Game:</button>
+                        <button class="btn btn-primary" @click="findGame">Join Game:</button>
                     </div>
                     <label for="game-code" class="sr-only">Game code</label>
-                    <input id="game-code" class="form-control" placeholder="Game code" v-model="code" @keyup.enter="join">
+                    <input id="game-code" class="form-control" placeholder="Game code" v-model="code" @keyup.enter="findGame">
                 </div>
             </div>
         </div>
@@ -45,30 +45,35 @@ export default {
         }
     },
     methods: {
-        join() {
+        findGame() {
             if (this.newUser === '' || this.code === '') return;
             // Find the game in the DB
-            const self = this;
             axios.get('api/play/' + self.code).then(response => {
                 console.log('Found existing game:', response.data);
-                self.$root.game = response.data;
-                self.$root.users.push(self.player);
-                self.$root.player = self.player;      
-                self.$router.push({ name: 'app', params: { gameCode: self.code }});
+                this.join(response.data);
             });
         },
         start() {
             if (this.newUser === '') return;
             // Get game ID from server
-            const self = this;
-            axios.post('/api/play/new').then(response => {
+            axios.post('/api/play/new', {
+                name: this.newUser,
+                score: 0,
+            }).then(response => {
                 console.log('Registered new game:', response.data);
-                self.$root.game = response.data
-                self.$root.users.push(self.player);
-                self.$root.player = self.player;
-                self.$router.push({ name: 'app', params: { gameCode: response.data.code }});
+                this.join(response.data);
             });
-
+        },
+        join(game) {
+            this.$root.game = {
+                id: game.id,
+                code: game.code,
+                created_at: game.created_at,
+                updated_at: game.updated_at,
+            };
+            this.$root.users = game.users;
+            this.$root.player = game.users.filter(u => u.name === this.player.name)[0];
+            this.$router.push({ name: 'app', params: { gameCode: game.code }});
         }
     }
 }

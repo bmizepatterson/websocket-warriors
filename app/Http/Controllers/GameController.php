@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Game;
+use App\User;
 use App\Events\UserScoreUpdated;
 use Illuminate\Http\Request;
 
@@ -19,7 +20,13 @@ class GameController extends Controller
         $game = new Game;
         $game->code = Game::makeCode();
         $game->save();
-        return $game;
+
+        $user = new User;
+        $user->name = $request->name;
+        $user->score = $request->score;
+        $game->users()->save($user);
+
+        return $game->fresh();
     }
 
     /**
