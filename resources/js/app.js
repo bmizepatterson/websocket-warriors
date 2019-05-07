@@ -11,6 +11,10 @@ const app = new Vue({
 
     data: {
         users: [],
+        player: {
+            name: null,
+            score: null,
+        },
     },
 
     template: `

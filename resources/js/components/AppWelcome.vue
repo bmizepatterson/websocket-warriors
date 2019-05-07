@@ -36,22 +36,26 @@ export default {
             code: '',
         }
     },
+    computed: {
+        player() {
+            return {
+                name: this.newUser,
+                score: 0,
+            }
+        }
+    },
     methods: {
         join() {
             if (this.newUser === '' || this.code === '') return ;
-            this.$root.users.push({
-                name: this.newUser,
-                score: 0,
-            });
+            this.$root.users.push(this.player);
+            this.$root.player = this.player;      
             this.$router.push({ name: 'app' });
         },
         start() {
             if (this.newUser === '') return;
             // Get game ID from server
-            this.$root.users.push({
-                name: this.newUser,
-                score: 0,
-            });
+            this.$root.users.push(this.player);
+            this.$root.player = this.player;
             this.$router.push({ name: 'app' });
         }
     }

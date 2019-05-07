@@ -6,7 +6,6 @@
             <ul class="list-group">
                 <li v-for="user in $root.users" :key="user.name" class="list-group-item border-0">
                     {{ user.name }}
-                    <span class="add" @click="updateScore(user)">+</span>
                     <span class="float-right">{{ user.score }}</span>
                 </li>
             </ul>
@@ -55,14 +54,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.add {
-    color: black;
-    background-color:white;
-    border-radius:50rem;
-    cursor: pointer;
-    vertical-align: middle;
-    margin-left: 5px;
-}
 .app {
     box-shadow: $shadow-drama;
     .player-list {
