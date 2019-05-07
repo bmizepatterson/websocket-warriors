@@ -49,7 +49,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .add {
     display: inline-block;
     width: 20;
@@ -61,5 +61,27 @@ export default {
     vertical-align: middle;
     text-align:center;
     margin-left: 5px;
+}
+.app {
+    box-shadow: $shadow-drama;
+
+    .board {
+        width: 600px;
+        background-color: $gray-100;
+    }
+    
+    .player-list {
+        width: 300px;
+        background-color: $black;
+
+        .list-group-item {
+            background: transparent;
+            border-radius: 0;
+        }
+
+        .badge {
+            font-size: inherit;
+        }
+    }
 }
 </style>

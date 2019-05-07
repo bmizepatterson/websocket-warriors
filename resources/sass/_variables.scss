@@ -1,24 +1,50 @@
+// General settings
+$enable-rounded: false;
+
 // Body
-$body-bg:    #343a40;
+$body-bg:    #8b60ed;
 $body-color: #fff;
 
 // Typography
-$font-family-sans-serif: 'Nunito', sans-serif;
-$font-size-base: 0.9rem;
-$line-height-base: 1.6;
+$font-family-sans-serif: 'Gugi', sans-serif;
+$font-size-base: 1.3rem;
 
 // Colors
-$blue: #3490dc;
-$indigo: #6574cd;
-$purple: #9561e2;
-$pink: #f66d9b;
-$red: #e3342f;
-$orange: #f6993f;
-$yellow: #ffed4a;
-$green: #38c172;
-$teal: #4dc0b5;
-$cyan: #6cb2eb;
-
+$white:    #fff;
+$gray-100: #f8f9fa;
+$gray-200: #e9ecef;
+$gray-300: #dee2e6;
+$gray-400: #ced4da;
+$gray-500: #adb5bd;
 $gray-600: #6c757d;
+$gray-700: #495057;
+$gray-800: #343a40;
+$gray-900: #212529;
+$black:    #000;
 
+// Bootstrap
+$blue:     #2e4469;
+$indigo:   #6574cd;
+$purple:   #9561e2;
+$pink:     #f66d9b;
+$red:      #e3342f;
+$orange:   #f6993f;
+$yellow:   #ffed4a;
+$green:    #38c172;
+$teal:     #4dc0b5;
+$cyan:     #6cb2eb;
+
+// Theme colors
+$theme-blue: #2e4469;
+
+$primary:       $theme-blue;
+$secondary:     $gray-600;
+$success:       $green;
+$info:          $cyan;
+$warning:       $yellow;
+$danger:        $red;
+$light:         $gray-100;
+$dark:          $gray-800;
+
+// Shadows
 $shadow-drama: 0 0 500px 10px $gray-600;
