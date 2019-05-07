@@ -1,6 +1,6 @@
 <template>
     <div>
-        <p class="game-code">Game Code: {{ $root.game }}</p>
+        <p class="game-code">Game Code: {{ $root.game.code }}</p>
         <div class="app row no-gutters" style="height: 600px;">
             <app-board />
 
@@ -29,28 +29,15 @@ export default {
         AppBoard,
     },
 
-    created() {
+    mounted() {
         const self = this;
-
-        Echo.channel('game.' + self.$root.game)
+        const channel = 'game.' + self.$root.game.id;
+        console.log('Connecting to ' + channel);
+        Echo.channel(channel)
             .listen('UserScoreUpdated', (e) => {
-                self.score = e.score;
+                console.log('Received score update:', e);
+                self.$root.users.filter(u => u.name === e.user)[0].score = e.score;
             });
-    },
-
-    methods: {
-        updateScore(user) {
-            const self = this;
-
-            const payload = {
-                user: user.name,
-                score: user.score += 10,
-            }
-
-            axios.post('/play', payload).then(response => {
-                console.log(response);
-            });
-        }
     }
 
 }

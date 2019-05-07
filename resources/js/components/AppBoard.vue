@@ -8,14 +8,12 @@
 export default {
     methods: {
         click() {
-            const payload = {
+            axios.post('/api/play/' + this.$root.game.code, {
                 user: this.$root.player.name,
                 score: this.$root.player.score += 10,
-            }
-
-            axios.post('/game', payload).then(response => {
-                console.log(response);
-            });
+            }).then(response => {
+                console.log('Registered play:', response);
+            }).catch(error => console.error(error));
         }
     }
 }

@@ -49,9 +49,9 @@ export default {
             if (this.newUser === '' || this.code === '') return;
             // Find the game in the DB
             const self = this;
-            axios.get('/play/' + self.code).then(response => {
-
-                self.$root.game = self.code;
+            axios.get('api/play/' + self.code).then(response => {
+                console.log('Found existing game:', response.data);
+                self.$root.game = response.data;
                 self.$root.users.push(self.player);
                 self.$root.player = self.player;      
                 self.$router.push({ name: 'app', params: { gameCode: self.code }});
@@ -61,11 +61,12 @@ export default {
             if (this.newUser === '') return;
             // Get game ID from server
             const self = this;
-            axios.post('/play/new').then(response => {
+            axios.post('/api/play/new').then(response => {
+                console.log('Registered new game:', response.data);
                 self.$root.game = response.data
                 self.$root.users.push(self.player);
                 self.$root.player = self.player;
-                self.$router.push({ name: 'app', params: { gameCode: response.data }});
+                self.$router.push({ name: 'app', params: { gameCode: response.data.code }});
             });
 
         }

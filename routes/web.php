@@ -16,12 +16,6 @@ use Illuminate\Http\Request;
 
 Route::view('/', 'app');
 
-Route::post('/play/new', 'GameController@store');
-Route::get('/play/{$game}', 'GameController@find');
-Route::post('/play', function(Request $request) {
-    event(new UserScoreUpdated($request->user, $request->score));
-});
-
 Route::fallback(function () {
     return redirect('/');
 });

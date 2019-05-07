@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Game;
+use App\Events\UserScoreUpdated;
 use Illuminate\Http\Request;
 
 class GameController extends Controller
@@ -18,7 +19,7 @@ class GameController extends Controller
         $game = new Game;
         $game->code = Game::makeCode();
         $game->save();
-        return $game->code;
+        return $game;
     }
 
     /**
@@ -36,11 +37,27 @@ class GameController extends Controller
      * Confirm that a game with the given code exists
      * 
      * @param  \Illuminate\Http\Request $request
-     * @param  \App\Game $game
+     * @param  string $gameCode
      * @return \Illuminate\Http\Response
      */
-    public function find(Request $request, Game $game)
+    public function find(Request $request, $gameCode)
     {
-        return;
+        return Game::whereCode($gameCode)->firstOrFail();
+    }
+
+    /**
+     * Process a play
+     * 
+     * @param  \Illuminate\Http\Request $request
+     * @param  string $gameCode
+     * @return \Illuminate\Http\Response
+     */
+    public function play(Request $request, $gameCode)
+    {
+        event(new UserScoreUpdated(
+            Game::whereCode($gameCode)->firstOrFail(),
+            $request->user,
+            $request->score,
+        ));
     }
 }
