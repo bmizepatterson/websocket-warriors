@@ -1,8 +1,5 @@
 <?php
 
-use App\WebSocketHandler;
-use BeyondCode\LaravelWebSockets\Facades\WebSocketsRouter;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -15,9 +12,6 @@ use BeyondCode\LaravelWebSockets\Facades\WebSocketsRouter;
 */
 
 Route::view('/', 'app');
-
-WebSocketsRouter::webSocket('app/{appKey}', WebSocketHandler::class);
-
 
 Route::fallback(function () {
     return redirect('/');
