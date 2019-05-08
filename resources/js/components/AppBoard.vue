@@ -6,9 +6,12 @@
                 <p v-if="message.system" v-html="message.text"></p>
                 <p v-else>{{ message.text }}</p>
             </div>
+            <div v-for="(user, index) in typingUsers" :key="index" class="message system-message">
+                <p><span class="user-name">{{ user.name }}</span><img src="/storage/typing.gif" width="24" height="24" /></p>
+            </div>
         </div>
         <div class="new-message pt-2">
-            <input class="form-control border" v-model="newMessage" @keyup.enter="send" v-focus>
+            <input class="form-control border" v-model="newMessage" @keydown="startTyping" @keyup.enter="send" v-focus>
         </div>
     </div>
 </template>
@@ -19,6 +22,7 @@ export default {
         return {
             messages: [],
             newMessage: '',
+            typingUsers: [],
         }
     },
     mounted() {
@@ -44,6 +48,11 @@ export default {
             })
             .listen('NewMessage', (e) => {
                 this.messages.push(e.message);
+            })
+            .listenForWhisper('typingStarted', (user) => {
+                if (this.typingUsers.findIndex(u => u.id === user.id) > -1) {
+                    this.typingUsers.push(user);
+                }
             });
     },
     methods: {
@@ -67,6 +76,15 @@ export default {
             axios.get('/api/play/' + this.$root.game.id + '/messages').then(response => {
                 response.data.forEach(m => this.messages.push(m));
             })
+        },
+        startTyping() {
+            this.whisperTypingStarted();
+        },
+        whisperTypingStarted() {
+            Echo.channel(this.$root.channel)
+                .whisper('typingStarted', {
+                    user: this.$root.player,
+                })
         }
     }
 }

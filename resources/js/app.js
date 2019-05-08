@@ -29,6 +29,7 @@ const app = new Vue({
 
     data: {
         game: '',
+        channel: '',
         users: [],
         player: {
             name: null,

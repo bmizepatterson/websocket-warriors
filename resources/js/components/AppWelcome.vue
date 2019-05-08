@@ -80,6 +80,7 @@ export default {
                 console.log('Users in game ' + game.code + ':', response.data);
                 this.$root.users = response.data;
                 this.$root.player = response.data.filter(u => u.name === this.player.name)[0];
+                this.$root.channel = 'game.' + game.id;
                 this.$router.push({ name: 'app', params: { gameCode: game.code }});
                 this.loadingNewGame = this.loadingGame = false;
             })
