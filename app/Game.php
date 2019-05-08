@@ -40,6 +40,14 @@ class Game extends Model
     }
 
     /**
+     * Get the messages in this game
+     */
+    public function messages()
+    {
+        return $this->hasMany(Message::class)->latest();
+    }
+
+    /**
      * Generate a unique but memorable id code for this game
      */
     public static function makeCode()

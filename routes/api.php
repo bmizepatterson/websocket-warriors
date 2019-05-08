@@ -17,3 +17,6 @@ Route::post('/play/new', 'GameController@store');
 Route::get('/play/{gameCode}', 'GameController@find');
 Route::put('/play/{game}', 'GameController@register');
 Route::post('/play/{game}', 'GameController@play');
+
+Route::get('/play/{game}/messages', 'MessageController@getMessages');
+Route::post('play/{game}/messages', 'MessageController@store');

@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class User extends Model
+class Message extends Model
 {
     /**
      * The attributes that should be cast to native types.
@@ -16,8 +16,12 @@ class User extends Model
         'updated_at' => 'datetime:U',
     ];
 
+    protected $fillable = [
+        'text',
+    ];
+
     /**
-     * Get the game that this user is playing
+     * Get the game that this message belongs to
      */
     public function game()
     {
@@ -25,10 +29,10 @@ class User extends Model
     }
 
     /**
-     * Get the messages for this user
+     * Get the user that this message belongs to
      */
-    public function messages()
+    public function user()
     {
-        return $this->hasMany(Message::class)->latest();
+        return $this->belongsTo(User::class);
     }
 }
