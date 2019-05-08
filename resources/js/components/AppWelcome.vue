@@ -10,7 +10,9 @@
 
         <div class="row no-gutters p-5">
             <div class="col-sm-3">
-                <button class="btn btn-block btn-primary" @click="start">New Game</button>
+                <button class="btn btn-block btn-primary" @click="start">New Game
+                    <font-awesome-icon v-if="loadingNewGame" icon="cog" class="loading-icon" pulse />
+                </button>
             </div>
             <div class="col-sm-2 or">
                 -&nbsp;OR&nbsp;-
@@ -22,6 +24,7 @@
                     </div>
                     <label for="game-code" class="sr-only">Game code</label>
                     <input id="game-code" class="form-control" placeholder="Game code" v-model="code" @keyup.enter="findGame">
+                    <font-awesome-icon v-if="loadingGame" icon="cog" class="loading-icon" pulse />
                 </div>
             </div>
         </div>
@@ -34,6 +37,8 @@ export default {
         return {
             newUser: '',
             code: '',
+            loadingNewGame: false,
+            loadingGame: false,
         }
     },
     computed: {
@@ -47,6 +52,7 @@ export default {
     methods: {
         findGame() {
             if (this.newUser === '' || this.code === '') return;
+            this.loadingGame = true;
             // Find the game in the DB
             axios.get('/api/play/' + this.code.toLowerCase()).then(response => {
                 console.log('Found existing game:', response.data);
@@ -55,6 +61,7 @@ export default {
         },
         start() {
             if (this.newUser === '') return;
+            this.loadingNewGame = true;
             // Get game ID from server
             axios.post('/api/play/new').then(response => {
                 console.log('Registered new game:', response.data);
@@ -74,6 +81,7 @@ export default {
                 this.$root.users = response.data;
                 this.$root.player = response.data.filter(u => u.name === this.player.name)[0];
                 this.$router.push({ name: 'app', params: { gameCode: game.code }});
+                this.loadingNewGame = this.loadingGame = false;
             })
         }
     }
@@ -87,5 +95,14 @@ export default {
     flex-direction: column;
     justify-content: center;
     letter-spacing: 0;
+}
+.loading-icon {
+    position: absolute;
+    top: 11px;
+    right: 1rem;
+
+    .form-control ~ & {
+        color: $primary;
+    }
 }
 </style>

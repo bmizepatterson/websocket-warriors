@@ -1,8 +1,18 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
-
 import router from './router';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import {
+    faCog,
+} from '@fortawesome/free-solid-svg-icons';
+
+library.add(
+    faCog,
+);
+
+Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 const app = new Vue({
     router,
