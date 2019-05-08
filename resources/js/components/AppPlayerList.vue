@@ -17,6 +17,11 @@ export default {
                 console.log('User ' + e.user.name + ' has joined the game');
                 this.$root.users.push(e.user);
             })
+            .listen('UserLeft', (e) => {
+                console.log('User ' + e.user.name + ' has left the game');
+                const index = this.$root.users.findIndex(u => u.id === e.user.id);
+                this.$root.users.splice(index, 1);
+            })
             .listen('UserScoreUpdated', (e) => {
                 console.log('Received score update:', e);
                 this.$root.users.filter(u => u.id === e.user.id)[0].score = e.user.score;

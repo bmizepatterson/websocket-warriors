@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Game;
 use App\User;
+use App\Events\UserLeft;
 use App\Events\UserJoined;
 use App\Events\UserScoreUpdated;
 use Illuminate\Http\Request;
@@ -65,6 +66,18 @@ class GameController extends Controller
             $user,    
         ));
         return $game->users()->get();
+    }
+
+    /**
+     * Remove a user from a game
+     * 
+     * @param  \Illuminate\Http\Request $request
+     * @param  \App\Game $game
+     * @return \Illuminate\Http\Response
+     */
+    public function leave(Request $request, Game $game)
+    {
+        broadcast(new UserLeft(User::findOrFail($request->id), $game))->toOthers();
     }
 
     /**

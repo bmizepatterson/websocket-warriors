@@ -1,7 +1,7 @@
 <template>
     <div class="board p-2">
         <div class="messages p-2 border">
-            <div v-for="(message, index) in messages" :key="index" :class="{ 'system-message': message.system }">
+            <div v-for="(message, index) in messages" :key="index" class="message" :class="{ 'system-message': message.system }">
                 <p v-if="message.user" class="mb-0 font-weight-bold">{{ message.user.name }}</p>
                 <p>{{ message.text }}</p>
             </div>
@@ -29,6 +29,18 @@ export default {
         }
         this.getMessages();
         Echo.channel('game.' + this.$root.game.id)
+            .listen('UserJoined', (e) => {
+                this.messages.push({
+                    system: true,
+                    text: e.user.name + ' has joined the room.'
+                });
+            })
+            .listen('UserLeft', (e) => {
+                this.messages.push({
+                    system: true,
+                    text: e.user.name + ' has left the room.'
+                });
+            })
             .listen('NewMessage', (e) => {
                 this.messages.push(e.message);
             });
@@ -80,6 +92,10 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
+
+    .message:last-of-type p:last-of-type {
+        margin-bottom: 0;
+    }
 
     .system-message {
         font-style: italic;

@@ -16,6 +16,11 @@ export default {
     components: {
         AppBoard,
         AppPlayerList,
+    },
+    destroyed() {
+        alert('Destroying AppMain component...');
+        axios.post('/api/play/' + this.$root.game.id + '/leave', this.$root.player);
+        Echo.leave('game.' + this.$root.game.id);
     }
 }
 </script>
