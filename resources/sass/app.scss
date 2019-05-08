@@ -19,6 +19,14 @@ body {
     opacity: 0;
 }
 
+.list-enter-active, .list-leave-active {
+    transition: opacity 1s;
+}
+.list-enter, .list-leave-to {
+    opacity: 0;
+    // transform: translateX(30px);
+}
+
 .btn {
     text-transform: uppercase;
     &:active, &:focus, &:not(:disabled):not(.disabled):active:focus {

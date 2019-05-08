@@ -1,11 +1,11 @@
 <template>
     <div class="player-list">
-        <ul class="list-group">
-            <li v-for="user in $root.users" :key="user.name" class="list-group-item border-0">
+        <transition-group name="list" tag="ul" class="list-group"> 
+            <li v-for="user in $root.users" :key="user.id" class="list-group-item border-0">
                 {{ user.name }}
                 <span class="float-right">{{ user.score }}</span>
             </li>
-        </ul>
+        </transition-group>
     </div>
 </template>
 
@@ -15,7 +15,7 @@ export default {
         Echo.channel('game.' + this.$root.game.id)
             .listen('UserJoined', (e) => {
                 console.log('User ' + e.user.name + ' has joined the game');
-                this.$root.users = e.game.users;
+                this.$root.users.push(e.user);
             })
             .listen('UserScoreUpdated', (e) => {
                 console.log('Received score update:', e);
