@@ -1,11 +1,14 @@
 <template>
-    <div class="player-list">
-        <transition-group name="list" tag="ul" class="list-group"> 
+    <div class="player-list d-flex flex-column">
+        <transition-group name="list" tag="ul" class="list-group flex-grow-1"> 
             <li v-for="user in $root.users" :key="user.id" class="list-group-item border-0">
                 {{ user.name }}
                 <span class="float-right">{{ user.score }}</span>
             </li>
         </transition-group>
+        <div class="flex-grow-0">
+            <button class="btn btn-block btn-secondary" @click="leave">Leave<font-awesome-icon icon="sign-out-alt" class="ml-2" /></button>
+        </div>
     </div>
 </template>
 
@@ -26,6 +29,13 @@ export default {
                 console.log('Received score update:', e);
                 this.$root.users.filter(u => u.id === e.user.id)[0].score = e.user.score;
             });
+    },
+    methods: {
+        leave() {
+            axios.post('/api/play/' + this.$root.game.id + '/leave', this.$root.player);
+            Echo.leave('game.' + this.$root.game.id);
+            this.$router.push({ name: 'welcome' });
+        }
     }
 }
 </script>

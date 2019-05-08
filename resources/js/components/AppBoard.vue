@@ -3,7 +3,8 @@
         <div class="messages p-2 border">
             <div v-for="(message, index) in messages" :key="index" class="message" :class="{ 'system-message': message.system }">
                 <p v-if="message.user" class="mb-0 font-weight-bold">{{ message.user.name }}</p>
-                <p>{{ message.text }}</p>
+                <p v-if="message.system" v-html="message.text"></p>
+                <p v-else>{{ message.text }}</p>
             </div>
         </div>
         <div class="new-message pt-2">
@@ -32,13 +33,13 @@ export default {
             .listen('UserJoined', (e) => {
                 this.messages.push({
                     system: true,
-                    text: e.user.name + ' has joined the room.'
+                    text: `<span class="user-name">${e.user.name}</span> has joined the room.`
                 });
             })
             .listen('UserLeft', (e) => {
                 this.messages.push({
                     system: true,
-                    text: e.user.name + ' has left the room.'
+                    text: `<span class="user-name">${e.user.name}</span> has left the room.`
                 });
             })
             .listen('NewMessage', (e) => {
