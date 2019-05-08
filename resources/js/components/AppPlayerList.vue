@@ -11,7 +11,17 @@
 
 <script>
 export default {
-
+    mounted() {
+        Echo.channel('game.' + this.$root.game.id)
+            .listen('UserJoined', (e) => {
+                console.log('User ' + e.user.name + ' has joined the game');
+                this.$root.users = e.game.users;
+            })
+            .listen('UserScoreUpdated', (e) => {
+                console.log('Received score update:', e);
+                this.$root.users.filter(u => u.id === e.user.id)[0].score = e.user.score;
+            });
+    }
 }
 </script>
 

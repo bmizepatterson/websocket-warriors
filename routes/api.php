@@ -15,4 +15,5 @@ use Illuminate\Http\Request;
 
 Route::post('/play/new', 'GameController@store');
 Route::get('/play/{gameCode}', 'GameController@find');
-Route::post('/play/{gameCode}', 'GameController@play');
+Route::put('/play/{game}', 'GameController@register');
+Route::post('/play/{game}', 'GameController@play');

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Game;
 use App\User;
+use App\Events\UserJoined;
 use App\Events\UserScoreUpdated;
 use Illuminate\Http\Request;
 
@@ -20,13 +21,7 @@ class GameController extends Controller
         $game = new Game;
         $game->code = Game::makeCode();
         $game->save();
-
-        $user = new User;
-        $user->name = $request->name;
-        $user->score = $request->score;
-        $game->users()->save($user);
-
-        return $game->fresh();
+        return $game;
     }
 
     /**
@@ -49,22 +44,44 @@ class GameController extends Controller
      */
     public function find(Request $request, $gameCode)
     {
-        return Game::whereCode($gameCode)->firstOrFail();
+        return Game::whereCode(strtolower($gameCode))->firstOrFail();
+    }
+
+    /**
+     * Register a new user in this game
+     * 
+     * @param  \Illuminate\Http\Request $request
+     * @param  \App\Game $game
+     * @return \Illuminate\Http\Response
+     */
+    public function register(Request $request, Game $game)
+    {
+        $user = new User;
+        $user->name = $request->name;
+        $user->score = $request->score;
+        $game->users()->save($user);
+        event(new UserJoined(
+            $game->fresh(),
+            $user,    
+        ));
+        return $game->users()->get();
     }
 
     /**
      * Process a play
      * 
      * @param  \Illuminate\Http\Request $request
-     * @param  string $gameCode
+     * @param  \App\Game $game
      * @return \Illuminate\Http\Response
      */
-    public function play(Request $request, $gameCode)
+    public function play(Request $request, Game $game)
     {
+        $user = User::findOrFail($request->id);
+        $user->score = $request->score;
+        $user->save();
         event(new UserScoreUpdated(
-            Game::whereCode($gameCode)->firstOrFail(),
-            $request->user,
-            $request->score,
+            $game,
+            $user->fresh()
         ));
     }
 }

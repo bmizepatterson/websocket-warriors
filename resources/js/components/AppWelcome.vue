@@ -39,7 +39,7 @@ export default {
     computed: {
         player() {
             return {
-                name: this.newUser,
+                name: this.newUser.toUpperCase(),
                 score: 0,
             }
         }
@@ -48,7 +48,7 @@ export default {
         findGame() {
             if (this.newUser === '' || this.code === '') return;
             // Find the game in the DB
-            axios.get('api/play/' + self.code).then(response => {
+            axios.get('/api/play/' + this.code.toLowerCase()).then(response => {
                 console.log('Found existing game:', response.data);
                 this.join(response.data);
             });
@@ -56,10 +56,7 @@ export default {
         start() {
             if (this.newUser === '') return;
             // Get game ID from server
-            axios.post('/api/play/new', {
-                name: this.newUser,
-                score: 0,
-            }).then(response => {
+            axios.post('/api/play/new').then(response => {
                 console.log('Registered new game:', response.data);
                 this.join(response.data);
             });
@@ -71,9 +68,13 @@ export default {
                 created_at: game.created_at,
                 updated_at: game.updated_at,
             };
-            this.$root.users = game.users;
-            this.$root.player = game.users.filter(u => u.name === this.player.name)[0];
-            this.$router.push({ name: 'app', params: { gameCode: game.code }});
+            axios.put('/api/play/' + game.id, this.player).then(response => {
+                console.log('Registered ' + this.player.name + ' in game ' + game.code);
+                console.log('Users in game ' + game.code + ':', response.data);
+                this.$root.users = response.data;
+                this.$root.player = response.data.filter(u => u.name === this.player.name)[0];
+                this.$router.push({ name: 'app', params: { gameCode: game.code }});
+            })
         }
     }
 }

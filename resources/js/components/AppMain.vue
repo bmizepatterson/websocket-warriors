@@ -16,16 +16,7 @@ export default {
     components: {
         AppBoard,
         AppPlayerList,
-    },
-
-    mounted() {
-        Echo.channel('game.' + this.$root.game.id)
-            .listen('UserScoreUpdated', (e) => {
-                console.log('Received score update:', e);
-                this.$root.users.filter(u => u.name === e.user)[0].score = e.score;
-            });
     }
-
 }
 </script>
 

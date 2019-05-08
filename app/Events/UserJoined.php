@@ -6,11 +6,13 @@ use App\Game;
 use App\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
-class UserScoreUpdated implements ShouldBroadcastNow
+class UserJoined implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -26,13 +28,6 @@ class UserScoreUpdated implements ShouldBroadcastNow
     {
         $this->game = $game;
         $this->user = $user;
-
-        \Log::debug('New UserScoreUpdated:', [
-            'channel' => 'game.'.$this->game->getKey(),
-            'game' => $game->code,
-            'user' => $user->name,
-            'score' => $user->score,
-        ]);
     }
 
     /**
