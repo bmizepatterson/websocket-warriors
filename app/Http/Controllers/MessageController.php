@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Game;
 use App\Message;
+use App\Events\NewMessage;
 use Illuminate\Http\Request;
 
 class MessageController extends Controller
@@ -26,7 +27,9 @@ class MessageController extends Controller
         $message->game()->associate($game);
         $message->user()->associate($user);
         $message->save();
-        return $message->fresh();
+        $message = $message->fresh();
+        broadcast(new NewMessage($message))->toOthers();
+        return $message;
     }
 
     /**

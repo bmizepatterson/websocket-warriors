@@ -21,6 +21,13 @@ class Message extends Model
     ];
 
     /**
+     * The relationships that should always be loaded.
+     *
+     * @var array
+     */
+    protected $with = ['user'];
+
+    /**
      * Get the game that this message belongs to
      */
     public function game()

@@ -1,10 +1,13 @@
 <template>
     <div class="board p-2">
         <div class="messages p-2 border">
-            <p v-for="(message, index) in messages" :key="index" :class="{ 'mb-0': index === $root.users.length - 1 }">{{ message.text }}</p>
+            <div v-for="(message, index) in messages" :key="index" :class="{ 'system-message': message.system }">
+                <p v-if="message.user" class="mb-0 font-weight-bold">{{ message.user.name }}</p>
+                <p>{{ message.text }}</p>
+            </div>
         </div>
         <div class="new-message pt-2">
-            <input class="form-control border" v-model="newMessage" @keyup.enter="send">
+            <input class="form-control border" v-model="newMessage" @keyup.enter="send" v-focus>
         </div>
     </div>
 </template>
@@ -20,19 +23,31 @@ export default {
     mounted() {
         if (this.$root.users.length < 2) {
             this.messages.push({
+                system: true,
                 text: 'Welcome to the chat room. You are the only one here.',
             });
         }
         this.getMessages();
+        Echo.channel('game.' + this.$root.game.id)
+            .listen('NewMessage', (e) => {
+                this.messages.push(e.message);
+            });
     },
     methods: {
         send() {
+            this.messages.push({ 
+                text: this.newMessage,
+                user: {
+                    name: this.$root.player.name,
+                }
+            });
+            const message = this.newMessage;
+            this.newMessage = '';
             axios.post('/api/play/' + this.$root.game.id + '/messages', {
-                message: this.newMessage,
+                message: message,
                 user: this.$root.player,
             }).then(response => {
-                this.messages.push(response.data);
-                this.newMessage = '';
+                this.messages.splice(-1, 1, response.data);
             });
         },
         getMessages() {
@@ -57,7 +72,7 @@ export default {
     color: black;
     letter-spacing: initial;
     word-spacing: initial;
-    font-size: 1rem;
+    font-size: 0.9rem;
     text-transform: initial;
 }
 .messages {
@@ -65,11 +80,16 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
+
+    .system-message {
+        font-style: italic;
+    }
 }
 .new-message {
     flex-grow: 0;
     .form-control {
         text-transform: initial;
+        font-size: 0.9rem;
     }
 }
 </style>
