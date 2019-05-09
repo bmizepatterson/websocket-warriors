@@ -40,6 +40,19 @@ export default {
         JoinButton,
     },
 
+    beforeRouteEnter(to, from, next) {
+        // if (this.$root && !this.root.joined) {
+            // Redirect if this game doesn't exist
+            axios.get('/api/play/' + to.params.gameCode)
+                .then(() => next())
+                .catch(error => {
+                    if (error.response.status === 404) {
+                        next('/');
+                    }
+                });
+        // }
+    },
+
     data() {
         return {
             newUser: '',
