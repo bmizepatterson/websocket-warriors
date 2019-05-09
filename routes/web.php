@@ -14,8 +14,6 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::view('/', 'app');
-
 Route::fallback(function () {
-    return redirect('/');
+    return view('app');
 });
