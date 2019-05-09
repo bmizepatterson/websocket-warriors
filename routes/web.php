@@ -14,10 +14,8 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('/{any}', 'AppController@index')->where('any', '.*');
+Route::view('/', 'app');
 
-// Route::view('/', 'app');
-
-// Route::fallback(function () {
-//     return redirect('/');
-// });
+Route::fallback(function () {
+    return redirect('/');
+});
