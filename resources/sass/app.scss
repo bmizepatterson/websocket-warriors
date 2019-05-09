@@ -39,6 +39,14 @@ body {
     &:active, &:focus, &:not(:disabled):not(.disabled):active:focus {
         box-shadow: 0 0 0 3px $primary;
     }
+    &:active ~ .input-group-append,
+    &:focus ~ .input-group-append {
+        box-shadow: 0 0 0 3px $primary;
+    }
+}
+
+.input-group-append {
+    transition: box-shadow 0.15s ease-in-out;
 }
 
 .user-name {

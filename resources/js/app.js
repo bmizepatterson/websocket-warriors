@@ -30,16 +30,37 @@ const app = new Vue({
     data: {
         game: '',
         channel: '',
+        joined: false,
         users: [],
         player: {
-            name: null,
-            score: null,
-        },
+            name: '',
+            score: 0,
+        }
     },
 
     template: `
         <transition name="fade" mode="out-in">
             <router-view></router-view>
         </transition>
-    `
+    `,
+
+    methods: {
+        join(game) {
+            this.game = {
+                id: game.id,
+                code: game.code,
+                created_at: game.created_at,
+                updated_at: game.updated_at,
+            };
+            console.log('Registering player:', this.player);
+            return axios.put('/api/play/' + game.id, this.player).then(response => {
+                console.log('Registered ' + this.player.name + ' in game ' + game.code);
+                console.log('Users in game ' + game.code + ':', response.data);
+                this.users = response.data;
+                this.player = response.data.filter(u => u.name === this.player.name)[0];
+                this.channel = 'game.' + game.id;    
+                this.joined = true;            
+            })
+        }
+    }
 });

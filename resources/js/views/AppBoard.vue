@@ -81,10 +81,10 @@ export default {
             this.whisperTypingStarted();
         },
         whisperTypingStarted() {
-            Echo.channel(this.$root.channel)
-                .whisper('typingStarted', {
-                    user: this.$root.player,
-                })
+            // Echo.channel(this.$root.channel)
+            //     .whisper('typingStarted', {
+            //         user: this.$root.player,
+            //     })
         }
     }
 }

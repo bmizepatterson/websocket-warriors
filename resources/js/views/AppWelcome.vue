@@ -19,12 +19,11 @@
             </div>
             <div class="col-sm-7">
                 <div class="input-group">
-                    <div class="input-group-prepend">
-                        <button class="btn btn-primary" @click="findGame">Join Game:</button>
-                    </div>
                     <label for="game-code" class="sr-only">Game code</label>
                     <input id="game-code" class="form-control" placeholder="Game code" v-model="code" @keyup.enter="findGame">
-                    <font-awesome-icon v-if="loadingGame" icon="cog" class="loading-icon" pulse />
+                    <div class="input-group-append">
+                        <join-button @click="findGame" />
+                    </div>
                 </div>
             </div>
         </div>
@@ -32,27 +31,23 @@
 </template>
 
 <script>
+import JoinButton from '../components/JoinButton.vue';
 export default {
+    components: {
+        JoinButton
+    },
     data() {
         return {
             newUser: '',
             code: '',
             loadingNewGame: false,
-            loadingGame: false,
-        }
-    },
-    computed: {
-        player() {
-            return {
-                name: this.newUser.toUpperCase(),
-                score: 0,
-            }
         }
     },
     methods: {
         findGame() {
             if (this.newUser === '' || this.code === '') return;
-            this.loadingGame = true;
+            this.$root.$emit('loading-join', true);
+            this.$root.player.name = this.newUser.toUpperCase();
             // Find the game in the DB
             axios.get('/api/play/' + this.code.toLowerCase()).then(response => {
                 console.log('Found existing game:', response.data);
@@ -62,6 +57,7 @@ export default {
         start() {
             if (this.newUser === '') return;
             this.loadingNewGame = true;
+            this.$root.player.name = this.newUser.toUpperCase();
             // Get game ID from server
             axios.post('/api/play/new').then(response => {
                 console.log('Registered new game:', response.data);
@@ -69,21 +65,11 @@ export default {
             });
         },
         join(game) {
-            this.$root.game = {
-                id: game.id,
-                code: game.code,
-                created_at: game.created_at,
-                updated_at: game.updated_at,
-            };
-            axios.put('/api/play/' + game.id, this.player).then(response => {
-                console.log('Registered ' + this.player.name + ' in game ' + game.code);
-                console.log('Users in game ' + game.code + ':', response.data);
-                this.$root.users = response.data;
-                this.$root.player = response.data.filter(u => u.name === this.player.name)[0];
-                this.$root.channel = 'game.' + game.id;
+            this.$root.join(game).then(() => {
                 this.$router.push({ name: 'app', params: { gameCode: game.code }});
-                this.loadingNewGame = this.loadingGame = false;
-            })
+                this.loadingNewGame = false;
+                this.$root.$emit('loading-join', false);
+            });
         }
     }
 }
@@ -96,14 +82,5 @@ export default {
     flex-direction: column;
     justify-content: center;
     letter-spacing: 0;
-}
-.loading-icon {
-    position: absolute;
-    top: 11px;
-    right: 1rem;
-
-    .form-control ~ & {
-        color: $primary;
-    }
 }
 </style>

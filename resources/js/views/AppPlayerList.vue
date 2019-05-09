@@ -7,7 +7,7 @@
             </li>
         </transition-group>
         <div class="flex-grow-0">
-            <button class="btn btn-block btn-secondary" @click="leave">Leave<font-awesome-icon icon="sign-out-alt" class="ml-2" /></button>
+            <button class="btn btn-block btn-secondary btn-leave" @click="leave">Leave<font-awesome-icon icon="sign-out-alt" class="ml-2" /></button>
         </div>
     </div>
 </template>
@@ -58,6 +58,11 @@ export default {
 
     .badge {
         font-size: inherit;
+    }
+
+    .btn-leave:active, .btn-leave:focus {
+        position: relative;
+        z-index: 1;
     }
 }
 </style>
