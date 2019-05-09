@@ -1,7 +1,7 @@
 <template>
     <div>
         <p class="game-code">Game Code: {{ $root.game.code }}</p>
-        <div class="app row no-gutters" style="height: 600px;">
+        <div class="app row no-gutters flex-nowrap" style="height: 600px;">
             <app-board />
             <app-player-list />
         </div>

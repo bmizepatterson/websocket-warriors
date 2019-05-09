@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import AppMain from '../components/AppMain';
-import AppWelcome from '../components/AppWelcome';
+import AppMain from '../views/AppMain';
+import AppWelcome from '../views/AppWelcome';
 
 Vue.use(Router);
 
@@ -10,7 +10,7 @@ export default new Router({
     linkActiveClass: 'active',
     linkExactActiveClass: 'active',
     routes: [
-        { 
+        {
             path: '/',
             name: 'welcome',
             component: AppWelcome,
