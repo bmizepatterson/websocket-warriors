@@ -38,7 +38,7 @@ class GameController extends Controller
 
     /**
      * Confirm that a game with the given code exists
-     * 
+     *
      * @param  \Illuminate\Http\Request $request
      * @param  string $gameCode
      * @return \Illuminate\Http\Response
@@ -50,7 +50,7 @@ class GameController extends Controller
 
     /**
      * Register a new user in this game
-     * 
+     *
      * @param  \Illuminate\Http\Request $request
      * @param  \App\Game $game
      * @return \Illuminate\Http\Response
@@ -61,16 +61,13 @@ class GameController extends Controller
         $user->name = $request->name;
         $user->score = $request->score;
         $game->users()->save($user);
-        event(new UserJoined(
-            $game->fresh(),
-            $user,    
-        ));
+        event(new UserJoined($game->fresh(), $user));
         return $game->users()->get();
     }
 
     /**
      * Remove a user from a game
-     * 
+     *
      * @param  \Illuminate\Http\Request $request
      * @param  \App\Game $game
      * @return \Illuminate\Http\Response
@@ -82,7 +79,7 @@ class GameController extends Controller
 
     /**
      * Process a play
-     * 
+     *
      * @param  \Illuminate\Http\Request $request
      * @param  \App\Game $game
      * @return \Illuminate\Http\Response
@@ -92,9 +89,6 @@ class GameController extends Controller
         $user = User::findOrFail($request->id);
         $user->score = $request->score;
         $user->save();
-        event(new UserScoreUpdated(
-            $game,
-            $user->fresh()
-        ));
+        event(new UserScoreUpdated($game, $user->fresh()));
     }
 }
