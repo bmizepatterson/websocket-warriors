@@ -3,11 +3,11 @@
 use Illuminate\Support\Str;
 
 $url = parse_url(getenv("DATABASE_URL"));
-$dbhost = $url['host'];
-$dbuser = $url['user'];
-$dbpass = $url['pass'];
-$dbport = $url['port'];
-$dbname = substr($url['path'], 1);
+$dbhost = env('DB_HOST', $url['host']);
+$dbuser = env('DB_USERNAME', $url['user']);
+$dbpass = env('DB_PASSWORD', $url['pass']);
+$dbport = env('DB_PORT', $url['port']);
+$dbname = env('DB_DATABASE', substr($url['path'], 1));
 
 return [
 
