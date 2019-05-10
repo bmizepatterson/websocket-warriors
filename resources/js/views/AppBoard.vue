@@ -1,10 +1,12 @@
 <template>
     <div class="board p-2">
-        <div class="messages p-2 border">
-            <div v-for="(message, index) in messages" :key="index" class="message" :class="{ 'system-message': message.system }">
-                <p v-if="message.user" class="mb-0 font-weight-bold">{{ message.user.name }}</p>
-                <p v-if="message.system" v-html="message.text"></p>
-                <p v-else>{{ message.text }}</p>
+        <div class="messages border">
+            <div class="messages-wrapper p-2" ref="messagesWrapper">
+                <div v-for="(message, index) in messages" :key="index" class="message" :class="{ 'system-message': message.system }">
+                    <p v-if="message.user" class="mb-0 font-weight-bold">{{ message.user.name }}</p>
+                    <p v-if="message.system" v-html="message.text"></p>
+                    <p v-else>{{ message.text }}</p>
+                </div>
             </div>
             <div v-for="(user, index) in typingUsers" :key="index" class="message system-message">
                 <p><span class="user-name">{{ user.name }}</span><img src="/storage/typing.gif" width="24" height="24" /></p>
@@ -57,7 +59,7 @@ export default {
     },
     methods: {
         send() {
-            this.messages.push({ 
+            this.messages.push({
                 text: this.newMessage,
                 user: {
                     name: this.$root.player.name,
@@ -70,11 +72,13 @@ export default {
                 user: this.$root.player,
             }).then(response => {
                 this.messages.splice(-1, 1, response.data);
+                this.$refs.messagesWrapper.scrollTop = this.$refs.messagesWrapper.scrollHeight;
             });
         },
         getMessages() {
             axios.get('/api/play/' + this.$root.game.id + '/messages').then(response => {
                 response.data.forEach(m => this.messages.push(m));
+                this.$refs.messagesWrapper.scrollTop = this.$refs.messagesWrapper.scrollHeight;
             })
         },
         startTyping() {
@@ -111,6 +115,11 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
+
+    .messages-wrapper {
+        height: 100%;
+        overflow: auto;
+    }
 
     .message:last-of-type p:last-of-type {
         margin-bottom: 0;
