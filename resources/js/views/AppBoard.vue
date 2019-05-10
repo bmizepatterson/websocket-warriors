@@ -77,7 +77,7 @@ export default {
         },
         getMessages() {
             axios.get('/api/play/' + this.$root.game.id + '/messages').then(response => {
-                response.data.forEach(m => this.messages.push(m));
+                response.data.forEach(m => this.messages.unshift(m));
                 this.$refs.messagesWrapper.scrollTop = this.$refs.messagesWrapper.scrollHeight;
             })
         },
