@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Gugi">
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 
-    <title>@yield('title')</title>
+    <title>Websocket Warriors</title>
 </head>
 <body>
     <div class="d-flex flex-column h-100 justify-content-center align-items-center">
