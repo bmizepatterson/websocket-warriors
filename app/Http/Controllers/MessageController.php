@@ -6,6 +6,7 @@ use App\User;
 use App\Game;
 use App\Message;
 use App\Events\NewMessage;
+use App\Events\UserTyping;
 use Illuminate\Http\Request;
 
 class MessageController extends Controller
@@ -27,9 +28,8 @@ class MessageController extends Controller
         $message->game()->associate($game);
         $message->user()->associate($user);
         $message->save();
-        $message = $message->fresh();
         broadcast(new NewMessage($message))->toOthers();
-        return $message;
+        return $game->fresh()->messages;
     }
 
     /**

@@ -6,6 +6,7 @@ use App\Game;
 use App\User;
 use App\Events\UserLeft;
 use App\Events\UserJoined;
+use App\Events\UserTyping;
 use App\Events\UserScoreUpdated;
 use Illuminate\Http\Request;
 
@@ -96,5 +97,31 @@ class GameController extends Controller
         $user->score = $request->score;
         $user->save();
         event(new UserScoreUpdated($game, $user->fresh()));
+    }
+
+    /**
+     * Send a user-typing event
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @param  \App\Game $game
+     * @param  \App\User $user
+     * @return \Illuminate\Http\Response
+     */
+    public function typing(Request $request, Game $game, User $user)
+    {
+        broadcast(new UserTyping($user->getKey(), $game->getKey(), true))->toOthers();
+    }
+
+    /**
+     * Send a user-idle event
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @param  \App\Game $game
+     * @param  \App\User $user
+     * @return \Illuminate\Http\Response
+     */
+    public function idle(Request $request, Game $game, User $user)
+    {
+        broadcast(new UserTyping($user->getKey(), $game->getKey(), false))->toOthers();
     }
 }

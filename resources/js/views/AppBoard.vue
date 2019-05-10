@@ -3,13 +3,15 @@
         <div class="messages border">
             <div class="messages-wrapper p-2" ref="messagesWrapper">
                 <div v-for="(message, index) in messages" :key="index" class="message" :class="{ 'system-message': message.system }">
-                    <p v-if="message.user" class="mb-0 font-weight-bold">{{ message.user.name }}</p>
+                    <p v-if="message.user" class="mb-0 font-weight-bold user-name">{{ message.user.name }}</p>
                     <p v-if="message.system" v-html="message.text"></p>
                     <p v-else>{{ message.text }}</p>
                 </div>
-            </div>
-            <div v-for="(user, index) in typingUsers" :key="index" class="message system-message">
-                <p><span class="user-name">{{ user.name }}</span><img src="/storage/typing.gif" width="24" height="24" /></p>
+                <div v-for="user in typingUsers" :key="user.id" class="message system-message">
+                    <transition name="fade">
+                        <p><span class="user-name">{{ user.name }}</span><typing-indicator class="ml-1" /></p>
+                    </transition>
+                </div>
             </div>
         </div>
         <div class="new-message pt-2">
@@ -19,15 +21,29 @@
 </template>
 
 <script>
+import _ from 'lodash';
+import TypingIndicator from '../components/TypingIndicator.vue';
+
 export default {
+
+    components: {
+        TypingIndicator,
+    },
+
     data() {
         return {
             messages: [],
             newMessage: '',
             typingUsers: [],
+            startTyping: null
         }
     },
-    mounted() {
+
+    created() {
+        this.startTyping = _.throttle(() => {
+            axios.post('/api/play/' + this.$root.game.id + '/user/' + this.$root.player.id + '/typing')
+        }, 500)
+
         if (this.$root.users.length < 2) {
             this.messages.push({
                 system: true,
@@ -35,7 +51,7 @@ export default {
             });
         }
         this.getMessages();
-        Echo.channel('game.' + this.$root.game.id)
+        Echo.channel(this.$root.channel)
             .listen('UserJoined', (e) => {
                 this.messages.push({
                     system: true,
@@ -50,15 +66,32 @@ export default {
             })
             .listen('NewMessage', (e) => {
                 this.messages.push(e.message);
+                this.scrollToBottom();
             })
-            .listenForWhisper('typingStarted', (user) => {
-                if (this.typingUsers.findIndex(u => u.id === user.id) > -1) {
-                    this.typingUsers.push(user);
+            .listen('UserTyping', e => {
+                console.log('Received typing Echo:', e);
+                let index = this.typingUsers.findIndex(u => u.id === e.userId);
+                // If they are typing, and they're not already typing, add them.
+                if (e.typing) {
+                    if (index < 0) {
+                        console.log('Adding user ' + e.userId + ' to typing users');
+                        this.typingUsers.push(this.$root.users.filter(u => u.id === e.userId)[0]);
+                        index = this.typingUsers.length - 1;
+                    }
+                    setTimeout(() => {
+                        this.typingUsers.splice(index, 1);
+                    }, 1000);
                 }
-            });
+                // They aren't typing, and they were typing, remove them.
+                // if (!e.typing && index > -1) {
+                //     this.typingUsers.splice(index, 1);
+                // }
+            });    
     },
+
     methods: {
         send() {
+            if (this.newMessage === '') return;
             this.messages.push({
                 text: this.newMessage,
                 user: {
@@ -70,10 +103,8 @@ export default {
             axios.post('/api/play/' + this.$root.game.id + '/messages', {
                 message: message,
                 user: this.$root.player,
-            }).then(response => {
-                this.messages.splice(-1, 1, response.data);
-                this.$refs.messagesWrapper.scrollTop = this.$refs.messagesWrapper.scrollHeight;
             });
+            this.scrollToBottom();
         },
         getMessages() {
             axios.get('/api/play/' + this.$root.game.id + '/messages').then(response => {
@@ -81,14 +112,10 @@ export default {
                 this.$refs.messagesWrapper.scrollTop = this.$refs.messagesWrapper.scrollHeight;
             })
         },
-        startTyping() {
-            this.whisperTypingStarted();
-        },
-        whisperTypingStarted() {
-            // Echo.channel(this.$root.channel)
-            //     .whisper('typingStarted', {
-            //         user: this.$root.player,
-            //     })
+        scrollToBottom() {
+            this.$nextTick(() => {
+                this.$refs.messagesWrapper.scrollTop = this.$refs.messagesWrapper.scrollHeight;
+            });
         }
     }
 }
@@ -119,6 +146,10 @@ export default {
     .messages-wrapper {
         height: 100%;
         overflow: auto;
+    }
+
+    .message p {
+        word-wrap: break-word;
     }
 
     .message:last-of-type p:last-of-type {

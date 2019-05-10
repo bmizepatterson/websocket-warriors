@@ -18,6 +18,8 @@ Route::get('/play/{gameCode}', 'GameController@find');
 Route::put('/play/{game}', 'GameController@register');
 Route::post('/play/{game}', 'GameController@play');
 Route::post('/play/{game}/leave', 'GameController@leave');
+Route::post('/play/{game}/user/{user}/typing', 'GameController@typing');
+Route::post('/play/{game}/user/{user}/idle', 'GameController@idle');
 
 Route::get('/play/{game}/messages', 'MessageController@getMessages');
 Route::post('play/{game}/messages', 'MessageController@store');
