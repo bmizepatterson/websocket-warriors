@@ -1,11 +1,13 @@
 <template>
     <div class="player-list d-flex flex-column">
-        <transition-group name="list" tag="ul" class="list-group flex-grow-1">
-            <li v-for="user in $root.users" :key="user.id" class="list-group-item border-0" style="word-spacing:initial;">
-                <span>{{ user.name }}</span>
-                <span class="float-right">{{ user.score }}</span>
-            </li>
-        </transition-group>
+        <div class="flex-grow-1 d-flex flex-column">
+            <transition-group name="list" tag="ul" class="list-group h-100 overflow-auto">
+                <li v-for="user in $root.users" :key="user.id" class="list-group-item border-0" style="word-spacing:initial;">
+                    <span>{{ user.name }}</span>
+                    <span class="float-right">{{ user.score }}</span>
+                </li>
+            </transition-group>
+        </div>
         <div class="flex-grow-0">
             <button class="btn btn-block btn-secondary btn-leave" @click="leave">Leave<font-awesome-icon icon="sign-out-alt" class="ml-2" /></button>
         </div>
