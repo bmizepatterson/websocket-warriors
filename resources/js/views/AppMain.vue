@@ -16,12 +16,12 @@
             </template>
         </app-modal>
         <template v-else>
-            <p class="game-code">Game Code: {{ $route.params.gameCode }}</p>
+            <p class="game-code">{{ $route.params.gameCode }}</p>
             <div class="app row no-gutters flex-nowrap" style="height: 600px;">
                 <app-board />
                 <app-player-list />
             </div>
-        </template>        
+        </template>
     </div>
 </template>
 
@@ -41,16 +41,28 @@ export default {
     },
 
     beforeRouteEnter(to, from, next) {
-        // if (this.$root && !this.root.joined) {
-            // Redirect if this game doesn't exist
-            axios.get('/api/play/' + to.params.gameCode)
-                .then(() => next())
-                .catch(error => {
-                    if (error.response.status === 404) {
-                        next('/');
-                    }
-                });
-        // }
+        // Redirect if this game doesn't exist
+        axios.get('/api/play/' + to.params.gameCode)
+            .then(() => next())
+            .catch(error => {
+                if (error.response.status === 404) {
+                    next('/');
+                }
+            });
+    },
+
+    beforeRouteLeave(to, from, next) {
+        if (this.$root.joined) {
+            // Remove the user from the game
+            console.log('Leaving game ' + this.$root.game.code);
+            this.leave().then(next);
+        } else {
+            next();
+        }
+    },
+
+    ready() {
+        window.addEventListener('beforeunload', this.leave);
     },
 
     data() {
@@ -72,6 +84,14 @@ export default {
         },
         goHome() {
             this.$router.push({ name: 'welcome' });
+        },
+        leave() {
+            return axios.post('/api/play/' + this.$root.game.id + '/leave', { user: this.$root.player })
+                .then(() => {
+                    // Clear out game data
+                    Echo.leave('game.' + this.$root.game.id);
+                    this.$root.reset();
+                })
         }
     }
 }
@@ -81,7 +101,6 @@ export default {
 .game-code {
     letter-spacing: 0.2px;
     word-spacing: 0;
-    font-size: 0.8rem;
     margin: 0;
 }
 .app {

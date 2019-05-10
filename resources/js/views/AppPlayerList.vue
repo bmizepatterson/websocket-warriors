@@ -1,6 +1,6 @@
 <template>
     <div class="player-list d-flex flex-column">
-        <transition-group name="list" tag="ul" class="list-group flex-grow-1"> 
+        <transition-group name="list" tag="ul" class="list-group flex-grow-1">
             <li v-for="user in $root.users" :key="user.id" class="list-group-item border-0" style="word-spacing:initial;">
                 <span>{{ user.name }}</span>
                 <span class="float-right">{{ user.score }}</span>
@@ -32,8 +32,6 @@ export default {
     },
     methods: {
         leave() {
-            axios.post('/api/play/' + this.$root.game.id + '/leave', this.$root.player);
-            Echo.leave('game.' + this.$root.game.id);
             this.$router.push({ name: 'welcome' });
         }
     }

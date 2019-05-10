@@ -58,9 +58,19 @@ const app = new Vue({
                 console.log('Users in game ' + game.code + ':', response.data);
                 this.users = response.data;
                 this.player = response.data.filter(u => u.name === this.player.name)[0];
-                this.channel = 'game.' + game.id;    
-                this.joined = true;            
+                this.channel = 'game.' + game.id;
+                this.joined = true;
             })
+        },
+        reset() {
+            this.game = '';
+            this.channel = '';
+            this.joined = false;
+            this.users = [];
+            this.player = {
+                name: '',
+                score: 0,
+            };
         }
     }
 });

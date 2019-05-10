@@ -74,8 +74,13 @@ class GameController extends Controller
      */
     public function leave(Request $request, Game $game)
     {
-        User::findOrFail($request->user['id'])->delete();
-        broadcast(new UserLeft(User::findOrFail($request->id), $game))->toOthers();
+        \Log::debug($request);
+        $user = User::findOrFail($request->user['id']);
+        broadcast(new UserLeft($user, $game))->toOthers();
+        $user->delete();
+        if (!$game->fresh()->users()->count()) {
+            $game->delete();
+        }
     }
 
     /**
